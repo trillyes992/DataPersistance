@@ -6,11 +6,14 @@ using UnityEngine.UI;
 
 public class MainManager : MonoBehaviour
 {
+    public static MainManager Instance;
     public Brick BrickPrefab;
     public int LineCount = 6;
     public Rigidbody Ball;
 
     public Text ScoreText;
+    public Text HighScoreText;
+    public  Text ID;
     public GameObject GameOverText;
     
     private bool m_Started = false;
@@ -20,9 +23,27 @@ public class MainManager : MonoBehaviour
 
     
     // Start is called before the first frame update
+    
+    // private void Awake() 
+    // {
+    //     if (Instance != null)
+    //     {
+    //         Destroy(gameObject);
+    //         return;
+    //     }
+        
+    //     Instance = this;
+    //     DontDestroyOnLoad(gameObject);    //使对象一直保持在后台，并且static一直都只有一个
+
+    // }
     void Start()
     {
         const float step = 0.6f;
+        ID.text = StartMenuManager.ID;
+        HighScoreText.text = "Best Scores:"
+                + StartMenuManager.HighScore + "  "
+                + StartMenuManager.HighScoreID;
+        
         int perLine = Mathf.FloorToInt(4.0f / step);
         
         int[] pointCountArray = new [] {1,1,2,2,5,5};
@@ -72,5 +93,14 @@ public class MainManager : MonoBehaviour
     {
         m_GameOver = true;
         GameOverText.SetActive(true);
+        if (m_Points>StartMenuManager.HighScore)
+        {
+            StartMenuManager.HighScore = m_Points;
+            StartMenuManager.HighScoreID = ID.text;
+            StartMenuManager.SaveInfo();
+        }
     }
+
+
+
 }
